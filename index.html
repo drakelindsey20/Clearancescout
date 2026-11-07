@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clearance Scout</title>
+<style>
+body{font-family:Arial;background:#f3f3f3;margin:0;color:#222}
+header{background:#f96302;color:white;padding:22px;text-align:center}
+main{padding:15px;max-width:600px;margin:auto}
+.card{background:white;padding:18px;border-radius:12px;margin:15px 0}
+button{background:#f96302;color:white;border:0;padding:14px;border-radius:8px;font-size:16px;width:100%;margin-top:10px}
+input,select{width:100%;padding:13px;margin:8px 0;box-sizing:border-box;font-size:16px}
+small{color:#666}
+</style>
+</head>
+<body>
+<header>
+<h1>Clearance Scout</h1>
+<p>Find Home Depot deals</p>
+</header>
+<main>
+<div class="card">
+<h3>Choose Your Store</h3>
+<input id="store" placeholder="City or store number">
+<button onclick="saveStore()">Save Store</button>
+<p id="saved"></p>
+</div>
+
+<div class="card">
+<h3>Choose a Category</h3>
+<select id="category">
+<option>Milwaukee tools</option>
+<option>DeWalt tools</option>
+<option>Plumbing</option>
+<option>Electrical</option>
+<option>Appliances</option>
+<option>Power tools</option>
+<option>Lighting</option>
+<option>Storage</option>
+<option>All clearance</option>
+</select>
+
+<h3>Minimum Discount</h3>
+<select id="discount">
+<option>30</option>
+<option>40</option>
+<option selected>50</option>
+<option>60</option>
+<option>70</option>
+<option>80</option>
+</select>
+<button onclick="search()">Search Home Depot</button>
+<small>Search results may not show every in-store markdown. Confirm prices and stock with your selected store.</small>
+</div>
+
+<div class="card">
+<h3>Deal Calculator</h3>
+<input id="regular" type="number" placeholder="Regular price">
+<input id="sale" type="number" placeholder="Clearance price">
+<button onclick="calculate()">Calculate Savings</button>
+<h2 id="result"></h2>
+</div>
+</main>
+
+<script>
+function saveStore(){
+let s=document.getElementById('store').value;
+localStorage.setItem('store',s);
+document.getElementById('saved').innerText='Saved: '+s;
+}
+function search(){
+let c=document.getElementById('category').value;
+let d=document.getElementById('discount').value;
+let url='https://www.homedepot.com/s/'+encodeURIComponent(c+' clearance');
+window.open(url,'_blank');
+}
+function calculate(){
+let r=Number(document.getElementById('regular').value);
+let s=Number(document.getElementById('sale').value);
+if(r<=0||s<0||s>r){
+document.getElementById('result').innerText='Enter valid prices';
+return;
+}
+let pct=((r-s)/r)*100;
+document.getElementById('result').innerText=
+pct.toFixed(1)+'% OFF — You save $'+(r-s).toFixed(2);
+}
+window.onload=function(){
+let s=localStorage.getItem('store');
+if(s){
+document.getElementById('store').value=s;
+document.getElementById('saved').innerText='Saved: '+s;
+}
+}
+</script>
+</body>
+</html>
